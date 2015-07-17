@@ -17,7 +17,7 @@ class MiluoGetui{
     protected $cid = '';
     protected $device_token = '';
     protected $alias = '';
-    
+
     public function __construct($app_key='',$app_id='',$master_secret='http://sdk.open.api.igexin.com/apiex.htm',$host='',$cid='',$device_token='',$alias=''){
     	$this->app_key = $app_key;
     	$this->app_id = $app_id;
@@ -33,82 +33,82 @@ class MiluoGetui{
         //2.PushMessageToList接口：支持对多个用户进行推送，建议为50个用户
         //3.pushMessageToApp接口：对单个应用下的所有用户进行推送，可根据省份，标签，机型过滤推送
         //
-    
+
     //单推接口案例
     function pushMessageToSingle(){
-        	$igt = new IGeTui(HOST,APPKEY,MASTERSECRET);
-        
+        	$igt = new IGeTui($this->host,$this->app_key,$this->master_secret);
+
     //     消息模版：
     //     1.TransmissionTemplate:透传功能模板
     //     2.LinkTemplate:通知打开链接功能模板
     //     3.NotificationTemplate：通知透传功能模板
     //     4.NotyPopLoadTemplate：通知弹框下载功能模板
-    	
+
     //    	$template = IGtNotyPopLoadTemplateDemo();
     //    	$template = IGtLinkTemplateDemo();
     //    	$template = IGtNotificationTemplateDemo();
         	$template = IGtTransmissionTemplateDemo();
-    
+
         //个推信息体
     	$message = new IGtSingleMessage();
-    
+
     	$message->set_isOffline(true);//是否离线
     	$message->set_offlineExpireTime(3600*12*1000);//离线时间
     	$message->set_data($template);//设置推送消息类型
     //	$message->set_PushNetWorkType(0);//设置是否根据WIFI推送消息，1为wifi推送，0为不限制推送
     	//接收方
     	$target = new IGtTarget();
-    	$target->set_appId(APPID);
-    	$target->set_clientId(CID);
+    	$target->set_appId($this->app_id);
+    	$target->set_clientId($this->cid);
     //    $target->set_alias(Alias);
-    
-    
+
+
         try {
             $rep = $igt->pushMessageToSingle($message, $target);
             var_dump($rep);
             echo ("<br><br>");
-    
+
         }catch(RequestException $e){
             $requstId =e.getRequestId();
             $rep = $igt->pushMessageToSingle($message, $target,$requstId);
             var_dump($rep);
             echo ("<br><br>");
         }
-    
+
     }
-    
+
     function pushMessageToSingleBatch()
     {
         putenv("gexin_pushSingleBatch_needAsync=false");
-    
-        $igt = new IGeTui(HOST, APPKEY, MASTERSECRET);
-        $batch = new IGtBatch(APPKEY, $igt);
-        $batch->setApiUrl(HOST);
+
+        $igt = new IGeTui($this->host, $this->app_key, $this->master_secret);
+        $batch = new IGtBatch($this->app_key, $igt);
+        $batch->setApiUrl($this->host);
         //$igt->connect();
         //消息模版：
         // 1.TransmissionTemplate:透传功能模板
         // 2.LinkTemplate:通知打开链接功能模板
         // 3.NotificationTemplate：通知透传功能模板
         // 4.NotyPopLoadTemplate：通知弹框下载功能模板
-    
+
     //    $template = IGtNotyPopLoadTemplateDemo();
         $template = IGtLinkTemplateDemo();
         //$template = IGtNotificationTemplateDemo();
     //    $template = IGtTransmissionTemplateDemo();
-    
+
         //个推信息体
         $message = new IGtSingleMessage();
         $message->set_isOffline(true);//是否离线
         $message->set_offlineExpireTime(12 * 1000 * 3600);//离线时间
         $message->set_data($template);//设置推送消息类型
     //    $message->set_PushNetWorkType(1);//设置是否根据WIFI推送消息，1为wifi推送，0为不限制推送
-    
+
         $target = new IGtTarget();
-        $target->set_appId(APPID);
-        $target->set_clientId(CID);
+        $target->set_appId($this->app_id);
+        $target->set_clientId($this->cid);
         $batch->add($message, $target);
         try {
-    
+
             $rep = $batch->submit();
             var_dump($rep);
             echo("<br><br>");
@@ -118,54 +118,54 @@ class MiluoGetui{
             echo ("<br><br>");
         }
     }
-    
+
     //多推接口案例
     function pushMessageToList()
     {
         putenv("gexin_pushList_needDetails=true");
         putenv("gexin_pushList_needAsync=true");
-    
-        $igt = new IGeTui(HOST, APPKEY, MASTERSECRET);
+
+        $igt = new IGeTui($this->host, $this->app_key, $this->master_secret);
         //消息模版：
         // 1.TransmissionTemplate:透传功能模板
         // 2.LinkTemplate:通知打开链接功能模板
         // 3.NotificationTemplate：通知透传功能模板
         // 4.NotyPopLoadTemplate：通知弹框下载功能模板
-    
-    
+
+
         //$template = IGtNotyPopLoadTemplateDemo();
         //$template = IGtLinkTemplateDemo();
         //$template = IGtNotificationTemplateDemo();
         $template = IGtTransmissionTemplateDemo();
         //个推信息体
         $message = new IGtListMessage();
-    
+
         $message->set_isOffline(true);//是否离线
         $message->set_offlineExpireTime(3600 * 12 * 1000);//离线时间
         $message->set_data($template);//设置推送消息类型
     //    $message->set_PushNetWorkType(1);	//设置是否根据WIFI推送消息，1为wifi推送，0为不限制推送
     //    $contentId = $igt->getContentId($message);
         $contentId = $igt->getContentId($message,"toList任务别名功能");	//根据TaskId设置组名，支持下划线，中文，英文，数字
-    
+
         //接收方1
         $target1 = new IGtTarget();
-        $target1->set_appId(APPID);
-        $target1->set_clientId(CID);
+        $target1->set_appId($this->app_id);
+        $target1->set_clientId($this->cid);
     //    $target1->set_alias(Alias);
-    
+
         $targetList[] = $target1;
-    
+
         $rep = $igt->pushMessageToList($contentId, $targetList);
-    
+
         var_dump($rep);
-    
+
         echo ("<br><br>");
-    
+
     }
-    
+
     //群推接口案例
     function pushMessageToApp(){
-    	$igt = new IGeTui(HOST,APPKEY,MASTERSECRET);
+    	$igt = new IGeTui($this->host,$this->app_key,$this->master_secret);
         //消息模版：
         // 1.TransmissionTemplate:透传功能模板
         // 2.LinkTemplate:通知打开链接功能模板
@@ -187,7 +187,7 @@ class MiluoGetui{
     //	$message->set_PushNetWorkType(1);	//设置是否根据WIFI推送消息，1为wifi推送，0为不限制推送
     //    $message->set_speed(50);          //控速推送，设置每秒消息的下发量
      
-    	$message->set_appIdList(array(APPID));
+    	$message->set_appIdList(array($this->app_id));
     	//$message->set_phoneTypeList(array('ANDROID'));
     	//$message->set_provinceList(array('浙江','北京','河南'));
     //	$message->set_tagList(array('中文'));
@@ -205,8 +205,8 @@ class MiluoGetui{
     function IGtNotyPopLoadTemplateDemo(){
             $template =  new IGtNotyPopLoadTemplate();
     
-            $template ->set_appId(APPID);//应用appid
-            $template ->set_appkey(APPKEY);//应用appkey
+            $template ->set_appId($this->app_id);//应用appid
+            $template ->set_appkey($this->app_key);//应用appkey
             //通知栏
             $template ->set_notyTitle("个推");//通知栏标题
             $template ->set_notyContent("个推最新版点击下载");//通知栏内容
@@ -233,8 +233,8 @@ class MiluoGetui{
     
     function IGtLinkTemplateDemo(){
             $template =  new IGtLinkTemplate();
-            $template ->set_appId(APPID);//应用appid
-            $template ->set_appkey(APPKEY);//应用appkey
+            $template ->set_appId($this->app_id);//应用appid
+            $template ->set_appkey($this->app_key);//应用appkey
             $template ->set_title("请输入通知标题");//通知栏标题
             $template ->set_text("请输入通知内容");//通知栏内容
             $template ->set_logo("");//通知栏logo
@@ -266,8 +266,8 @@ class MiluoGetui{
     
     function IGtNotificationTemplateDemo(){
             $template =  new IGtNotificationTemplate();
-            $template->set_appId(APPID);//应用appid
-            $template->set_appkey(APPKEY);//应用appkey
+            $template->set_appId($this->app_id);//应用appid
+            $template->set_appkey($this->app_key);//应用appkey
             $template->set_transmissionType(1);//透传消息类型
             $template->set_transmissionContent("测试离线");//透传内容
             $template->set_title("个推");//通知栏标题
@@ -300,8 +300,8 @@ class MiluoGetui{
     
     function IGtTransmissionTemplateDemo(){
             $template =  new IGtTransmissionTemplate();
-            $template->set_appId(APPID);//应用appid
-            $template->set_appkey(APPKEY);//应用appkey
+            $template->set_appId($this->app_id);//应用appid
+            $template->set_appkey($this->app_key);//应用appkey
             $template->set_transmissionType(1);//透传消息类型
             $template->set_transmissionContent("测试离线ddd");//透传内容
             //$template->set_duration(BEGINTIME,ENDTIME); //设置ANDROID客户端在此时间区间内展示消息
