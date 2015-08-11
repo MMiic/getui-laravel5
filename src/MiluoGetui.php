@@ -1,5 +1,5 @@
 <?php
-namespace Miluo\MiluoGetui;
+namespace Miluo\GetuiSDK;
 
 use IGeTui;
 use IGtBatch;
@@ -8,7 +8,7 @@ use IGtAPNPayload;
 use IGtBaseTemplate;
 
 
-class MiluoGetui{
+class Getui{
     
     protected $app_key = '';
     protected $app_id = '';
