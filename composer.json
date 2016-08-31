@@ -18,18 +18,13 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "illuminate/config": "~5.0",
-    "illuminate/support": "~5.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "~4.0"
+    "illuminate/support": "5.*",
+    "illuminate/events": "5.*",
+    "illuminate/config": "5.*"
   },
   "autoload": {
-      "classmap" : [
-          "src/Getui"
-      ],
     "psr-4": {
-      "Miluo\\GetuiSDK\\": "src/"
+      "Miluo\\GetuiSDK\\": "src/MMiic/GeTui/"
     }
   },
   "minimum-stability": "dev"
